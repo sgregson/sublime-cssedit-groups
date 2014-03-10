@@ -3,7 +3,8 @@ import sublime, sublime_plugin, re
 class CssGroupsCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         self.groups = []
-        self.view.find_all("@group.*(?=\*)", 0, "$0", self.groups)
+        #self.view.find_all("@group.*(?=\*)", 0, "$0", self.groups)
+        self.view.find_all("/\**\n[\*\s]*(.*)[\*\s]*\n\**/$", 0, "$1", self.groups) #contents of comment block
         self.view.window().show_quick_panel(self.groups, self.goto_group, sublime.MONOSPACE_FONT)
 
     def goto_group(self, choice):
@@ -11,7 +12,7 @@ class CssGroupsCommand(sublime_plugin.TextCommand):
             return
 
         group = self.groups[choice]
-        jump_location = self.view.find(re.escape(group), 0)
+        jump_location = self.view.find("/\**\n[\*\s]*" + re.escape(group) + "[\*\s]*\n\**/$", 0) # handle duplicates of search term
 
         self.view.sel().clear()
         self.view.sel().add(jump_location)
