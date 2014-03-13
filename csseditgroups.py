@@ -11,7 +11,7 @@ class CssGroupsCommand(sublime_plugin.TextCommand):
             return
 
         group = self.groups[choice]
-        jump_location = self.view.find("/\**\n[\*\s]*" + re.escape(group) + "[\*\s]*\n\**/$", 0) # handle duplicates of search term
+        jump_location = self.view.find("/[\*\s ]*\n[\*\s ]*" + re.escape(group) + "[\*\s ]*\n[\*\s ]*/$", 0) # handle duplicates of search term
 
         self.view.sel().clear()
         self.view.sel().add(jump_location)
